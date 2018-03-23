@@ -39,6 +39,8 @@ public class MonitorUDP extends Thread {
                     DatagramPacket response = new DatagramPacket(buffer, buffer.length);
                     socket.receive(response);
 
+                    // verificar integridade da resposta
+
                     // atualizar tabela com informação recebida
                 }
 
