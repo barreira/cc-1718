@@ -1,3 +1,7 @@
+doc/*
+!doc/relatorio.tex
+!doc/relatorio.pdf
+!doc/img/
 outros/
 .idea/
 *.iml
