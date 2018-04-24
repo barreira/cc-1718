@@ -8,6 +8,6 @@ public class ServerStatus {
     private int ram;
     private int cpu;
     private float rtt;
-    private float larguraBanda;
+    private float bandwidth;
 
 }

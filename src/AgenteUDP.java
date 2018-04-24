@@ -1,14 +1,16 @@
+import com.sun.management.OperatingSystemMXBean;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.Random;
 
-public class MonitorUDP extends Thread {
+public class AgenteUDP extends Thread {
 
-    private TabelaEstado tabela;
     private MulticastSocket socket;
     private byte[] buffer;
+    private OperatingSystemMXBean os;
 
     private static final int PROBING_INTERVAL = 10000;
     private static final String MULTICAST_ADDR = "239.8.8.8";
@@ -17,10 +19,10 @@ public class MonitorUDP extends Thread {
     private static final String PROBING_MSG = "Probing servers...";
     private static final int NUM_SERVERS = 3;
 
-    MonitorUDP(TabelaEstado tabela) {
-        this.tabela = tabela;
+    public AgenteUDP() {
         socket = null;
         buffer = null;
+        os = null;
     }
 
     public void run() {
@@ -31,23 +33,19 @@ public class MonitorUDP extends Thread {
             socket.joinGroup(group);
 
             while (true) {
-                DatagramPacket packet = new DatagramPacket(PROBING_MSG.getBytes(), PROBING_MSG.length(), group,
-                                                           MULTICAST_PORT);
-                socket.send(packet);
+                buffer = new byte[BUFFER_SIZE];
+                DatagramPacket message = new DatagramPacket(buffer, buffer.length);
+                socket.receive(message);
 
-                for (int i = 0; i < NUM_SERVERS; i++) {
-                    buffer = new byte[BUFFER_SIZE];
-                    DatagramPacket response = new DatagramPacket(buffer, buffer.length);
-                    socket.receive(response);
+                byte cpuLoad = (byte) (os.getSystemCpuLoad() * 100);
+                int freeRAM = (int) (os.getFreePhysicalMemorySize() >> 20); // B -> MB
 
-                    // verificar integridade da resposta
+                Random rand = new Random();
+                int time = rand.nextInt(3000) + 1;
 
-                    // atualizar tabela com informação recebida
+                Thread.sleep(time);
 
-
-                }
-
-                Thread.sleep(PROBING_INTERVAL);
+                ProbeResponse response = new ProbeResponse(3, cpuLoad, freeRAM);
             }
         }
         catch (InterruptedException | IOException e) {
