@@ -7,16 +7,18 @@ public class ServerStatus {
     private int ram;
     private int cpu;
     private long rtt;
-    private long devRTT;
+    private long totalRTT;
+    private int numReceived;
     private float bandwidth;
 
-    public ServerStatus(InetAddress ip, int port, int ram, int cpu, long rtt, long devRTT, float bandwidth) {
+    public ServerStatus(InetAddress ip, int port, int ram, int cpu, long rtt, long totalRTT, int numReceived, float bandwidth) {
         this.ip = ip;
         this.port = port;
         this.ram = ram;
         this.cpu = cpu;
         this.rtt = rtt;
-        this.devRTT = devRTT;
+        this.totalRTT = totalRTT;
+        this.numReceived = numReceived;
         this.bandwidth = bandwidth;
     }
 
@@ -40,11 +42,38 @@ public class ServerStatus {
         return rtt;
     }
 
-    public long getDevRTT() {
-        return devRTT;
+    public long getTotalRTT() {
+        return totalRTT;
+    }
+
+    public int getNumReceived() {
+        return numReceived;
     }
 
     public float getBandwidth() {
         return bandwidth;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("IP: " + ip);
+        sb.append(", ");
+        sb.append("Port: " + port);
+        sb.append(", ");
+        sb.append("FreeRAM: " + ram + "MB");
+        sb.append(", ");
+        sb.append("CPU: " + cpu + "%");
+        sb.append(", ");
+        sb.append("RTT: " + rtt + "s");
+        sb.append(", ");
+        sb.append("TotalRTT: " + totalRTT);
+        sb.append(", ");
+        sb.append("NumReceived: " + numReceived);
+        sb.append(", ");
+        sb.append("Bandwidth: " + bandwidth);
+        sb.append("; ");
+
+        return sb.toString();
     }
 }

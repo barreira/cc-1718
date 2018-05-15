@@ -7,9 +7,6 @@ public class StatusTable {
 
     private Map<InetAddress, ServerStatus> servers;
 
-    private static long ALPHA = (long) 0.125;
-    private static long BETA = (long) 0.25;
-
     public StatusTable() {
         servers = new HashMap<>();
     }
@@ -21,22 +18,20 @@ public class StatusTable {
     public synchronized void update(long sentTimestamp, long receivedTimestamp, InetAddress ip, int port, byte cpuUsage,
                                     int freeRAM) {
 
-        long sampleRTT = receivedTimestamp - sentTimestamp;
+        long sampleRTT = sentTimestamp - receivedTimestamp;
 
         ServerStatus status = servers.get(ip);
 
         if (status == null) { // Ainda não havia nenhum registo do servidor
-            long estimatedRTT = sampleRTT;
-            long devRTT = sampleRTT / 2;
-
-            status = new ServerStatus(ip, port, cpuUsage, freeRAM, estimatedRTT, devRTT,0);
+            status = new ServerStatus(ip, port, freeRAM, cpuUsage, sampleRTT, sampleRTT, 1, 0);
             servers.put(ip, status);
         }
         else {
-            long estimatedRTT = (1 - ALPHA) * status.getRTT() + ALPHA * sampleRTT;
-            long devRTT = (1 - BETA) * status.getDevRTT() + BETA * Math.abs(sampleRTT - estimatedRTT);
+            int newNumReceived = status.getNumReceived() + 1;
+            long newTotalRTT = status.getTotalRTT() + sampleRTT;
+            long newRTT = newTotalRTT / (long) newNumReceived;
 
-            status = new ServerStatus(ip, port, cpuUsage, freeRAM, estimatedRTT, devRTT, 0);
+            status = new ServerStatus(ip, port, freeRAM, cpuUsage, newRTT, newTotalRTT, newNumReceived,0);
             servers.put(ip, status);
         }
     }
@@ -47,5 +42,16 @@ public class StatusTable {
         public int compare(ServerStatus s1, ServerStatus s2) {
             return 0;
         }
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (ServerStatus ss : servers.values()) {
+            sb.append(ss.toString());
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 }

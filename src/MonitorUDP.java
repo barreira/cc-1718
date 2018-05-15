@@ -72,6 +72,8 @@ public class MonitorUDP {
 
             table.update(receivedTimestamp, response.getTimestamp(), packet.getAddress(), packet.getPort(),
                          response.getCpuUsage(), response.getFreeRam());
+
+            System.out.println(table.toString());
         }
     }
 

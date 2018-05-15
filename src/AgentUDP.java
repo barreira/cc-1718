@@ -1,5 +1,6 @@
 import com.sun.management.OperatingSystemMXBean;
 
+import java.awt.*;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.*;
@@ -29,6 +30,8 @@ public class AgentUDP extends Thread {
             InetAddress group = InetAddress.getByName(MULTICAST_ADDRESS);
             multicastSocket.joinGroup(group);
 
+            os = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+
             while (true) {
 
                 byte[] buffer = new byte[BUFFER_SIZE];
@@ -42,10 +45,10 @@ public class AgentUDP extends Thread {
 
                 ProbeRequest request = new ProbeRequest(packet.getData());
 
-//                byte cpuUsage = (byte) (os.getSystemCpuLoad() * 100);
-//                int freeRam = (int) (os.getFreePhysicalMemorySize() >> 20); // B -> MB
-                byte cpuUsage = (byte) 50;
-                int freeRam = 1024;
+                byte cpuUsage = (byte) (os.getSystemCpuLoad() * 100);
+                int freeRam = (int) (os.getFreePhysicalMemorySize() >> 20); // B -> MB
+//                byte cpuUsage = (byte) 50;
+//                int freeRam = 1024;
                 long timestamp = request.getTimestamp();
 
                 ProbeResponse response = new ProbeResponse(cpuUsage, freeRam, timestamp);
