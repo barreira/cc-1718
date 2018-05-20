@@ -11,7 +11,7 @@ public class StatusTable {
         servers = new HashMap<>();
     }
 
-    public InetAddress chooseServer() {
+    public ServerStatus chooseServer() {
         return null;
     }
 

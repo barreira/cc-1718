@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.net.*;
 
-public class MonitorUDP {
+public class UDPMonitor {
 
     private static StatusTable table;
 
@@ -11,7 +11,7 @@ public class MonitorUDP {
     private static final int BUFFER_SIZE = 1024;
     private static final String PROBING_MSG = "Probing servers...";
 
-    MonitorUDP(StatusTable table) {
+    UDPMonitor(StatusTable table) {
         this.table = table;
     }
 
