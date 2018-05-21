@@ -4,6 +4,7 @@ public class ServerStatus {
 
     private InetAddress ip;
     private int port;
+    private long timestamp;
     private int ram;
     private int cpu;
     private long rtt;
@@ -11,10 +12,11 @@ public class ServerStatus {
     private int numReceived;
     private float bandwidth;
 
-    public ServerStatus(InetAddress ip, int port, int ram, int cpu, long rtt, long totalRTT, int numReceived,
-                        float bandwidth) {
+    public ServerStatus(InetAddress ip, int port, long timestamp, int ram, int cpu, long rtt, long totalRTT,
+                        int numReceived, float bandwidth) {
         this.ip = ip;
         this.port = port;
+        this.timestamp = timestamp;
         this.ram = ram;
         this.cpu = cpu;
         this.rtt = rtt;
@@ -29,6 +31,10 @@ public class ServerStatus {
 
     public int getPort() {
         return port;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 
     public int getRAM() {
@@ -59,6 +65,8 @@ public class ServerStatus {
         StringBuilder sb = new StringBuilder();
 
         sb.append("IP: " + ip.getHostAddress() + ":" + port);
+        sb.append(", ");
+        sb.append("SentTimestamp: " + timestamp);
         sb.append(", ");
         sb.append("FreeRAM: " + ram + "MB");
         sb.append(", ");

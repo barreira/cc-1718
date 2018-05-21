@@ -35,10 +35,6 @@ public class UDPAgent {
 
         public void run() {
             try {
-                Random rand = new Random();
-                int time = rand.nextInt(10) + 1;
-                Thread.sleep(time * 1000);
-
                 byte cpuUsage = (byte) (os.getSystemCpuLoad() * 100);
                 int freeRam = (int) (os.getFreePhysicalMemorySize() >> 20); // B -> MB
                 long timestamp = request.getTimestamp();
@@ -49,6 +45,10 @@ public class UDPAgent {
 
                 packet = new DatagramPacket(response.toByteArray(), response.toByteArray().length, packet.getAddress(),
                         packet.getPort());
+
+                Random rand = new Random();
+                int time = rand.nextInt(10) + 1;
+                Thread.sleep(time * 1000);
 
                 socket.send(packet);
                 System.out.println("Sent: " + response.toString());
@@ -81,7 +81,7 @@ public class UDPAgent {
                 rh.start();
             }
             else {
-                System.out.println("Received unauthenticated probe");
+                System.out.println("WARNING: Received unauthenticated probe");
             }
         }
 

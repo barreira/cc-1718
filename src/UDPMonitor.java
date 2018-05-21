@@ -65,19 +65,25 @@ public class UDPMonitor {
 
             ProbeResponse response = new ProbeResponse(packet.getData());
 
-            if (HMAC.isAuthenticated(sharedKey, response.getHMAC(), response.getData())) { // verificar integridade da resposta
+            if (HMAC.isAuthenticated(sharedKey, response.getHMAC(), response.getData())) { // verificar integridade
+                                                                                           // da resposta
 
-                System.out.println("\nReceived: " + response.toString());
+                System.out.println("Received: " + response.toString());
 
-                // atualizar table com informação recebida
+                // atualizar tabela com informação recebida
 
-                table.update(receivedTimestamp, response.getTimestamp(), packet.getAddress(), packet.getPort(),
-                             response.getCpuUsage(), response.getFreeRam());
+                boolean newerInfo = table.update(receivedTimestamp, response.getTimestamp(), packet.getAddress(),
+                                                 packet.getPort(), response.getCpuUsage(), response.getFreeRam());
 
-                System.out.println(table.toString() + "\n");
+                if (newerInfo) {
+                    System.out.println(table.toString());
+                }
+                else {
+                    System.out.println(table.toString() + " [no update on server load]");
+                }
             }
             else {
-                System.out.println("Received unauthenticated response");
+                System.out.println("WARNING: Received unauthenticated response");
             }
         }
     }
@@ -104,6 +110,5 @@ public class UDPMonitor {
         catch (IOException e) {
             throw new IOException();
         }
-
     }
 }
