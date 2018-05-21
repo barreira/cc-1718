@@ -10,10 +10,9 @@ public class ServerStatus {
     private long rtt;
     private long totalRTT;
     private int numReceived;
-    private float bandwidth;
 
     public ServerStatus(InetAddress ip, int port, long timestamp, int ram, int cpu, long rtt, long totalRTT,
-                        int numReceived, float bandwidth) {
+                        int numReceived) {
         this.ip = ip;
         this.port = port;
         this.timestamp = timestamp;
@@ -22,7 +21,6 @@ public class ServerStatus {
         this.rtt = rtt;
         this.totalRTT = totalRTT;
         this.numReceived = numReceived;
-        this.bandwidth = bandwidth;
     }
 
     public InetAddress getIP() {
@@ -57,10 +55,6 @@ public class ServerStatus {
         return numReceived;
     }
 
-    public float getBandwidth() {
-        return bandwidth;
-    }
-
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
@@ -78,7 +72,6 @@ public class ServerStatus {
 //        sb.append(", ");
 //        sb.append("NumReceived: " + numReceived);
 //        sb.append(", ");
-        sb.append("Bandwidth: " + bandwidth);
 
         return sb.toString();
     }

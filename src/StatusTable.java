@@ -23,7 +23,7 @@ public class StatusTable {
         ServerStatus status = servers.get(ip);
 
         if (status == null) { // Ainda não havia nenhum registo do servidor
-            status = new ServerStatus(ip, port, sentTimestamp, freeRAM, cpuUsage, sampleRTT, sampleRTT, 1, 0);
+            status = new ServerStatus(ip, port, sentTimestamp, freeRAM, cpuUsage, sampleRTT, sampleRTT, 1);
         }
         else {
             int newNumReceived = status.getNumReceived() + 1;
@@ -31,8 +31,7 @@ public class StatusTable {
             long newRTT = newTotalRTT / (long) newNumReceived;
 
             if (sentTimestamp > status.getTimestamp()) { // caso seja informação mais recente acerca do servidor
-                status = new ServerStatus(ip, port, sentTimestamp, freeRAM, cpuUsage, newRTT, newTotalRTT,
-                                          newNumReceived,0);
+                status = new ServerStatus(ip, port, sentTimestamp, freeRAM, cpuUsage, newRTT, newTotalRTT, newNumReceived);
             }
             else { // informação recebida é mais antiga do que a que já existia
                 newer = false;
@@ -42,7 +41,7 @@ public class StatusTable {
                 int oldCpuUsage = status.getCPU();
 
                 status = new ServerStatus(ip, port, oldSentTimestamp, oldFreeRAM, oldCpuUsage, newRTT, newTotalRTT,
-                                          newNumReceived, 0);
+                                          newNumReceived);
             }
         }
 

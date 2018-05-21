@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.net.*;
 
-public class UDPMonitor {
+public class UDPMonitor extends Thread {
 
     private static StatusTable table;
 
@@ -86,8 +86,7 @@ public class UDPMonitor {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-
+    public void run() {
         try {
             table = new StatusTable();
 
@@ -106,7 +105,8 @@ public class UDPMonitor {
             }
         }
         catch (IOException e) {
-            throw new IOException();
+            throw new RuntimeException(e);
         }
     }
+
 }
