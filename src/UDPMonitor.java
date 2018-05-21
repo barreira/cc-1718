@@ -8,8 +8,9 @@ public class UDPMonitor {
     private static final int PROBING_INTERVAL = 5000;
     private static final String MULTICAST_ADDR = "239.8.8.8";
     private static final int MULTICAST_PORT = 8888;
-    private static final int BUFFER_SIZE = 1024;
-    private static final String PROBING_MSG = "Probing servers...";
+    private static final String sharedKey = "cc1718g23";
+
+    private static final int BUFFER_SIZE = 128;
 
     UDPMonitor(StatusTable table) {
         this.table = table;
@@ -24,7 +25,6 @@ public class UDPMonitor {
         }
 
         public void run() {
-
             try {
                 while (true) {
                     InetAddress group = InetAddress.getByName(MULTICAST_ADDR);
@@ -32,11 +32,13 @@ public class UDPMonitor {
 
                     ProbeRequest request = new ProbeRequest(timestamp);
 
+                    request.addHMAC(HMAC.generateHMAC(sharedKey, request.getData()));
+
                     DatagramPacket packet = new DatagramPacket(request.toByteArray(), request.toByteArray().length,
                                                                group, MULTICAST_PORT);
 
                     socket.send(packet);
-                    System.out.println("Sent probing request");
+                    System.out.println("Sent: " + request.toString());
 
                     sleep(PROBING_INTERVAL);
                 }
@@ -63,17 +65,20 @@ public class UDPMonitor {
 
             ProbeResponse response = new ProbeResponse(packet.getData());
 
-            // verificar integridade da resposta
+            if (HMAC.isAuthenticated(sharedKey, response.getHMAC(), response.getData())) { // verificar integridade da resposta
 
+                System.out.println("\nReceived: " + response.toString());
 
-            // atualizar table com informação recebida
+                // atualizar table com informação recebida
 
-            System.out.println("Received probe response");
+                table.update(receivedTimestamp, response.getTimestamp(), packet.getAddress(), packet.getPort(),
+                             response.getCpuUsage(), response.getFreeRam());
 
-            table.update(receivedTimestamp, response.getTimestamp(), packet.getAddress(), packet.getPort(),
-                         response.getCpuUsage(), response.getFreeRam());
-
-            System.out.println(table.toString());
+                System.out.println(table.toString() + "\n");
+            }
+            else {
+                System.out.println("Received unauthenticated response");
+            }
         }
     }
 

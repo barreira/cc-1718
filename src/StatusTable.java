@@ -47,10 +47,17 @@ public class StatusTable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
+        sb.append("StatusTable(" );
+        sb.append("\n");
+
         for (ServerStatus ss : servers.values()) {
+            sb.append("\t");
             sb.append(ss.toString());
+            sb.append(";");
             sb.append("\n");
         }
+
+        sb.append(")");
 
         return sb.toString();
     }

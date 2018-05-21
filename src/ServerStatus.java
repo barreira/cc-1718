@@ -11,7 +11,8 @@ public class ServerStatus {
     private int numReceived;
     private float bandwidth;
 
-    public ServerStatus(InetAddress ip, int port, int ram, int cpu, long rtt, long totalRTT, int numReceived, float bandwidth) {
+    public ServerStatus(InetAddress ip, int port, int ram, int cpu, long rtt, long totalRTT, int numReceived,
+                        float bandwidth) {
         this.ip = ip;
         this.port = port;
         this.ram = ram;
@@ -57,22 +58,19 @@ public class ServerStatus {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("IP: " + ip);
-        sb.append(", ");
-        sb.append("Port: " + port);
+        sb.append("IP: " + ip.getHostAddress() + ":" + port);
         sb.append(", ");
         sb.append("FreeRAM: " + ram + "MB");
         sb.append(", ");
         sb.append("CPU: " + cpu + "%");
         sb.append(", ");
-        sb.append("RTT: " + rtt + "s");
+        sb.append("RTT: " + rtt + "ms");
         sb.append(", ");
-        sb.append("TotalRTT: " + totalRTT);
-        sb.append(", ");
-        sb.append("NumReceived: " + numReceived);
-        sb.append(", ");
+//        sb.append("TotalRTT: " + totalRTT);
+//        sb.append(", ");
+//        sb.append("NumReceived: " + numReceived);
+//        sb.append(", ");
         sb.append("Bandwidth: " + bandwidth);
-        sb.append("; ");
 
         return sb.toString();
     }

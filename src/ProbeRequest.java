@@ -1,38 +1,28 @@
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 public class ProbeRequest {
 
     private final long timestamp;
-    private final String hmac;
+    private byte[] hmac;
 
-    public ProbeRequest(long timestamp, String hmac) {
+    public ProbeRequest(long timestamp) {
         this.timestamp = timestamp;
-        this.hmac = hmac;
-        
+        this.hmac = null;
     }
 
-    public ProbeRequest(byte[] response) {
-        try {
-            ByteBuffer buffer = ByteBuffer.wrap(response);
+    public ProbeRequest(byte[] request) {
+        ByteBuffer buffer = ByteBuffer.wrap(request);
 
-            timestamp = buffer.getLong();
-
-            byte[] aux = new byte[buffer.remaining()];
-            buffer.get(aux);
-            hmac = new String(aux, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-
+        timestamp = buffer.getLong();
+        hmac = new byte[32];
+        buffer.get(hmac);
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public String getHMAC() {
+    public byte[] getHMAC() {
         return hmac;
     }
 
@@ -44,12 +34,28 @@ public class ProbeRequest {
         return buffer.array();
     }
 
+    public void addHMAC(byte[] hmac) {
+        this.hmac = hmac;
+    }
+
     public byte[] toByteArray() {
         ByteBuffer buffer = ByteBuffer.allocate(40);
 
-        buffer.putLong(timestamp); // 8
-        buffer.put(hmac.getBytes()); // 32
+        buffer.putLong(timestamp); // 8 bytes
+        buffer.put(hmac); // 32 bytes = 256 bits (from SHA-256 output)
 
         return buffer.array();
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("ProbeRequest(");
+        sb.append("Timestamp: " + timestamp);
+        sb.append(", ");
+        sb.append("HMAC: " + HMAC.toBase64String(hmac));
+        sb.append(")");
+
+        return sb.toString();
     }
 }
