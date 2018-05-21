@@ -51,12 +51,10 @@ public class UDPMonitor {
 
     private static class ResponseHandler extends Thread {
 
-        private final DatagramSocket socket;
         private final DatagramPacket packet;
         private final long receivedTimestamp;
 
-        private ResponseHandler(DatagramSocket socket, DatagramPacket packet, long receivedTimestamp) {
-            this.socket = socket;
+        private ResponseHandler(DatagramPacket packet, long receivedTimestamp) {
             this.packet = packet;
             this.receivedTimestamp = receivedTimestamp;
         }
@@ -103,7 +101,7 @@ public class UDPMonitor {
                 DatagramPacket response = new DatagramPacket(buffer, buffer.length);
                 socket.receive(response);
 
-                ResponseHandler rh = new ResponseHandler(socket, response, System.currentTimeMillis());
+                ResponseHandler rh = new ResponseHandler(response, System.currentTimeMillis());
                 rh.start();
             }
         }
