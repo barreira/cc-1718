@@ -1,5 +1,4 @@
 import java.net.InetAddress;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,24 @@ public class StatusTable {
     }
 
     public ServerStatus chooseServer() {
-        return null;
+        if (servers.isEmpty()) {
+            return null;
+        }
+        else {
+            ServerStatus serverStatus = null;
+            double score = Double.MAX_VALUE;
+
+            for (ServerStatus ss : servers.values()) {
+                double newScore = ss.getCPU() * 100 + ss.getRAM() * 10 + ss.getRTT() * 2;
+
+                if (newScore < score) {
+                    score = newScore;
+                    serverStatus = ss;
+                }
+            }
+
+            return serverStatus;
+        }
     }
 
     public synchronized boolean update(long receivedTimestamp, long sentTimestamp, InetAddress ip, int port,
@@ -48,14 +64,6 @@ public class StatusTable {
         servers.put(ip, status);
 
         return newer;
-    }
-
-    private static class ServerComparator implements Comparator<ServerStatus> {
-
-        @Override
-        public int compare(ServerStatus s1, ServerStatus s2) {
-            return 0;
-        }
     }
 
     public String toString() {
