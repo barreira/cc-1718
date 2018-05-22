@@ -88,8 +88,6 @@ public class UDPMonitor extends Thread {
 
     public void run() {
         try {
-            table = new StatusTable();
-
             DatagramSocket socket = new DatagramSocket();
 
             Prober p = new Prober(socket);

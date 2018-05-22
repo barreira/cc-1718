@@ -8,7 +8,7 @@ import java.net.Socket;
 public class ReverseProxy {
 
     private static final int RP_PORT = 80;
-    private static final int BUFFER_SIZE = 1024;
+    private static final int BUFFER_SIZE = 4096;
 
     private static class BackendHandler extends Thread {
         private final Socket clientSocket;
@@ -52,7 +52,7 @@ public class ReverseProxy {
                 if (backendServer == null) {
                     PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
 
-                    pw.write("HTTP/1.1 404 Not Found\n");
+                    pw.write("HTTP/1.1 404 Not Found\r\n\r\n");
                     pw.flush();
 
                     clientSocket.close();

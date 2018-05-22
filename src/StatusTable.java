@@ -10,7 +10,7 @@ public class StatusTable {
         servers = new HashMap<>();
     }
 
-    public ServerStatus chooseServer() {
+    public synchronized ServerStatus chooseServer() {
         if (servers.isEmpty()) {
             return null;
         }
@@ -66,7 +66,7 @@ public class StatusTable {
         return newer;
     }
 
-    public String toString() {
+    public synchronized String toString() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("StatusTable(" );
