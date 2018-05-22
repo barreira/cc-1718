@@ -60,6 +60,8 @@ public class ReverseProxy {
                 else {
                     Socket backendSocket = new Socket(backendServer.getIP(), RP_PORT);
 
+                    System.out.println("Client connected to server with address " + backendServer.getIP().getHostName());
+
                     InputStream fromClient = clientSocket.getInputStream();
                     OutputStream toBackend = backendSocket.getOutputStream();
 
