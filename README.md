@@ -1,5 +1,5 @@
 # CC
-[//]: # "### Nota final do trabalho: 16 em 20."
+### Nota final do trabalho: 16 em 20.
 
 Trabalho prático da U.C. de __Comunicações por Computador__ (2017/2018)
 
